@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - FURBABY HAVEN KENNELS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* LOGIN PAGE STYLES */
+    .login-page {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #111 0%, #333 100%);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .login-page.show {
+      display: flex;
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-container h2 {
+      margin-top: 0;
+      color: #111;
+      margin-bottom: 30px;
+    }
+    .login-container .form-group {
+      margin-bottom: 20px;
+    }
+    .login-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #111;
+      text-align: left;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .login-container input:focus {
+      outline: none;
+      border-color: #ffcc00;
+      box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #ffcc00;
+      color: #111;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .login-btn:hover {
+      background: #e6b800;
+    }
+    .login-error {
+      color: #dc3545;
+      margin-bottom: 15px;
+      display: none;
+    }
+    .login-error.show {
+      display: block;
+    }
+    .logout-btn {
+      background: #dc3545 !important;
+      color: white !important;
+      padding: 8px 15px !important;
+      font-size: 12px !important;
+    }
+    .logout-btn:hover {
+      background: #c82333 !important;
+    }
+  </style>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Arial, sans-serif; margin:0; background:#f6f6f6; }
+    
+    /* HEADER */
+    header {
+      background:#111;
+      color:white;
+      padding:20px 30px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    header img { height:60px; margin-right:15px; }
+    header h1 { margin:0; font-size:24px; }
+    header p { margin:0; font-size:14px; color:#ddd; }
+    nav a { color:white; margin:0 10px; text-decoration:none; font-weight:bold; }
+    nav a:hover { color:#ffcc00; text-decoration:underline; }
+    
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab-btn {
+      padding: 12px 24px;
+      background: #f6f6f6;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: white;
+      border-bottom-color: #ffcc00;
+      color: #111;
+    }
+    .tab-btn:hover {
+      background: white;
+    }
+    
+    /* TAB CONTENT */
+    .tab-content {
+      display: none;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* FORMS */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #111;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #ffcc00;
+      box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+    }
+    
+    /* BUTTONS */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: #ffcc00;
+      color: #111;
+    }
+    .btn-primary:hover {
+      background: #e6b800;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    /* DOGS TABLE */
+    .table-container {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th {
+      background: #111;
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    tr:hover {
+      background: #f9f9f9;
+    }
+    .dog-img {
+      max-width: 60px;
+      height: auto;
+      border-radius: 5px;
+    }
+    
+    /* STATUS BADGES */
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge-sold {
+      background: #dc3545;
+      color: white;
+    }
+    .badge-available {
+      background: #28a745;
+      color: white;
+    }
+    
+    /* ALERTS */
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .alert.show {
+      display: block;
+    }
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    /* GALLERY INPUTS */
+    .gallery-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal.show {
+      display: block;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .close-btn {
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .close-btn:hover {
+      color: #111;
+    }
+    
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 10px;
+      }
+      table {
+        font-size: 12px;
+      }
+      .btn {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .tabs {
+        flex-direction: column;
+      }
+      .tab-btn {
+        padding: 10px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-page show">
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <div id="loginError" class="login-error"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="adminPassword">Password</label>
+        <input type="password" id="adminPassword" name="adminPassword" required autofocus>
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN ADMIN PANEL (hidden until authenticated) -->
+<div id="adminPanel" style="display:none;">
+
+<header>
+  <div style="display:flex; align-items:center;">
+    <img src="images/logo.png" alt="FURBABY HAVEN KENNELS Logo">
+    <div>
+      <h1>FURBABY HAVEN KENNELS - ADMIN</h1>
+      <p>Admin Management Panel</p>
+    </div>
+  </div>
+  <nav>
+    <a href="index.html">Back to Site</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+  
+  <!-- ALERT MESSAGES -->
+  <div id="alert" class="alert"></div>
+  
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('add-dog')">Add New Puppy</button>
+    <button class="tab-btn" onclick="switchTab('manage-dogs')">Manage Puppies</button>
+  </div>
+  
+  <!-- TAB 1: ADD NEW DOG -->
+  <div id="add-dog" class="tab-content active">
+    <h2>Add New Puppy</h2>
+    <form id="addDogForm">
+      <div class="form-group">
+        <label for="dogName">Puppy Name *</label>
+        <input type="text" id="dogName" name="dogName" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="dogColor">Color *</label>
+        <input type="text" id="dogColor" name="dogColor" placeholder="e.g., Chocolate, Blue tri" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="dogGender">Gender & Age *</label>
+        <input type="text" id="dogGender" name="dogGender" placeholder="e.g., Male 8WKS" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="dogPrice">Price *</label>
+        <input type="number" id="dogPrice" name="dogPrice" min="0" step="0.01" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="dogReview">Review (for sold puppies)</label>
+        <textarea id="dogReview" name="dogReview" placeholder="Customer review (optional)"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Main Image URL *</label>
+        <input type="text" id="dogImg" name="dogImg" placeholder="e.g., images/pup18.jpeg" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Gallery Images (Image URLs)</label>
+        <div class="gallery-inputs">
+          <input type="text" class="gallery-img" placeholder="Image 1 URL">
+          <input type="text" class="gallery-img" placeholder="Image 2 URL">
+          <input type="text" class="gallery-img" placeholder="Image 3 URL">
+          <input type="text" class="gallery-img" placeholder="Image 4 URL">
+          <input type="text" class="gallery-img" placeholder="Image 5 URL">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="dogSold">Mark as Sold?</label>
+        <select id="dogSold" name="dogSold">
+          <option value="false">Available</option>
+          <option value="true">Sold</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Add Puppy</button>
+    </form>
+  </div>
+  
+  <!-- TAB 2: MANAGE DOGS -->
+  <div id="manage-dogs" class="tab-content">
+    <h2>Manage Puppies</h2>
+    <div class="table-container">
+      <table id="dogsTable">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Gender</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dogsTableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>
+
+<!-- EDIT DOG MODAL -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Puppy</h2>
+      <span class="close-btn" onclick="closeEditModal()">&times;</span>
+    </div>
+    <form id="editDogForm">
+      <input type="hidden" id="editDogId">
+      
+      <div class="form-group">
+        <label for="editDogName">Puppy Name</label>
+        <input type="text" id="editDogName" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="editDogColor">Color</label>
+        <input type="text" id="editDogColor" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="editDogGender">Gender & Age</label>
+        <input type="text" id="editDogGender" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="editDogPrice">Price</label>
+        <input type="number" id="editDogPrice" min="0" step="0.01" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="editDogReview">Review</label>
+        <textarea id="editDogReview"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="editDogSold">Status</label>
+        <select id="editDogSold">
+          <option value="false">Available</option>
+          <option value="true">Sold</option>
+        </select>
+      </div>
+      
+      <div style="display: flex; gap: 10px;">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</div>
+<!-- END ADMIN PANEL -->
+
+<!-- SCRIPTS -->
+<script src="puppies.js"></script>
+<script src="admin.js"></script>
+
+</body>
+</html>
