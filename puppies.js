@@ -52,7 +52,7 @@ const puppies = [
     id: "p7", name: "Duke", color: "Blue tri Merle", 
     img: "images/pup7.jpeg", 
     gallery: ["images/pup7.jpeg","images/pup7_1.jpeg","images/pup7_2.jpeg","images/pup7_3.jpeg","images/pup7_4.jpeg"], 
-    sold: false, 
+    sold: true, 
     gender: "Male 6 Wks", 
     review: "",
     price: 3000 
